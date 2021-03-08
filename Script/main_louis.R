@@ -34,6 +34,13 @@ plot(density(data$V1,bw=.7,adjust=1,kernel="cosine"),col="green4",xlim=c(0,5));
 lines(density(data$V1,bw=.7,adjust=1,kernel="biweight"),col="blue");
 lines(density(data$V1,bw=.7,adjust=1,kernel="epanechnikov"),col="red",xlim=c(0,5));
 
+a <- density(devA$X1, kernel = "gaussian", bw = "SJ")
+b <- density(devA$X1)
 
+c <- boundedDensity(x = devA$X1, densities =  a$x[1:200], lower.limit = min(devA$X1), upper.limit = max(devA$X1))
+d <-  boundedDensity(x = devA$X1, densities =  b$x[1:200], lower.limit = min(devA$X1), upper.limit = max(devA$X1))
+
+mise(c,d)
 
 mise(data,kernel,discreteApproximation=TRUE)
+MISE(x=a, xgrid=data$V1,lambda = 0,)
