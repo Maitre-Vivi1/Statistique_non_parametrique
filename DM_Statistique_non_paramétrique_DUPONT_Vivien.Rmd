@@ -1,0 +1,32 @@
+---
+title: "Dm Statistique non paramétrique"
+subtitle: "Vivien DUPONT"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# A) Estimation de l’espérance d’une loi symétrique
+
+
+```{r, echo=FALSE, message=FALSE}
+library(readr)
+devA <- read_table2("C:/Users/vivi1/Desktop/Ensai 2A/Statistiques non paramètriques/devA.txt", 
+    col_names = FALSE)
+```
+
+### 1)
+
+On cherche à obtenir le meilleur estimateur $\hat{f}_n(x)$ au sens de l'erreur quandratique intégrée moyenne :  
+    $d(\hat{f}_n,f) = E[\int(\hat{f}_n(x)-f(x))^2dx]$
+
+
+
+
+```{r}
+d <- density(devA$X1)
+plot(devA$X1)
+lines(d, col="red")
+```
