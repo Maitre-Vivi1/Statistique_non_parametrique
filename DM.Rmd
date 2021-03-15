@@ -1,0 +1,46 @@
+---
+title: "DM"
+author: "Vivien & Louis"
+date: "01/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+
+
+Le meilleur estimateur de ${f}(x)$ au sens de l'erreur quadratique moyenne intégrée est l'estimateur de Parzen-Rosenblatt $\hat{f}(x) = \frac{1}{nh_{cv}}\sum_{j=1}^{n}K(\frac{x-X_{j}}{h_{cv}})$ ou K est un noyau choisi et $h_{cv}$ petit obtenue par validation croisé *leave-one-out*.
+
+
+```{r, echo=FALSE, message=FALSE}
+library(readr)
+devA <- read_csv("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
+```
+
+
+
+```{r, echo = FALSE, warning=FALSE}
+plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien")
+plot(density(devA$X1, bw="ucv", adjust=1, kernel="rectangular"), main = "Estimation de f(x) par noyau rectangulaire")
+plot(density(devA$X1, bw="ucv", adjust=1, kernel="triangular"), main = "Estimation de f(x) par noyau triangulaire")
+plot(density(devA$X1, bw="ucv", adjust=1, kernel="epanechnikov"), main = "Estimation de f(x) par noyau epanechnikov")
+plot(density(devA$X1, bw="ucv", adjust=1, kernel="cosine"), main = "Estimation de f(x) par noyau cosine")
+plot(density(devA$X1, bw="ucv", adjust=1, kernel="biweight"), main = "Estimation de f(x) par noyau biweight")
+```
+
+
+
+# Question 2
+
+
+- Puisque l'on estime une loi de densité (semblant continue de par les nombreux chiffres après la virgule des observations) on souhaite que notre estimation ait les bonnes propriétés associées aux lois de densité. Ainsi il vient naturellement que le noyau $K$ doit être une densité de probabilité, lisse, continue et différentiable. Par défaut et sans information supplémentaire j'ai décidé de retenir le noyau gaussien. De plus, en faisant exception des valeurs extrêmes de notre echantillon, la partie centrale de la distribution de notre echantillon semble suivre une loi normale.
+
+```{r, echo=FALSE}
+qqnorm(devA$X1, main = "Echantillon devA", xlab = "Quantiles théoriques de loi normale", ylab = "Quantiles observés")
+qqline(devA$X1)
+```
+
+- Pour ce qui est de choix de $h$  
