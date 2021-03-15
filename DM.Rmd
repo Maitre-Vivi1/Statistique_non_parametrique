@@ -51,14 +51,24 @@ qqline(devA$X1)
 
 # Question 3 
 
-$f(x)$ est une loi symétrique par rapport à $\theta_{0}$. Par conséquent  
+$f(x)$ est une loi symétrique par rapport à $\theta_{0}$. Par conséquent, on peut estimer graphiquement $\theta_{0}$ par l'abscisse du point de maximum de la courbe. *i.e.*
+
+```{r, echo=FALSE, warning=FALSE}
+plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien");
+abline(v = fn_chapeau$x[which(fn_chapeau$y == max(fn_chapeau$y))], col = "red")
+```
+
+On approxime alors $\theta_{0}$ par $\theta_{0}^{approx} =$ `r fn_chapeau$x[which(fn_chapeau$y == max(fn_chapeau$y))]`
+
+
+# Question 4 
 
 
 
 
 #Partie B
 
-##Question 1
+#Question 1
 
 Sachant que les données observées sont issues d'une régression linéaire,que nos valeurs manquantes sont en fait des réponses et que l'hypothèse des observations MAR est satisfaite on a :
 
