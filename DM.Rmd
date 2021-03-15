@@ -23,6 +23,7 @@ devA <- read_csv("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\don
 
 
 ```{r, echo = FALSE, warning=FALSE}
+fn_chapeau <- density(devA$X1, bw="ucv", adjust=1, kernel="gaussian") 
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien")
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="rectangular"), main = "Estimation de f(x) par noyau rectangulaire")
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="triangular"), main = "Estimation de f(x) par noyau triangulaire")
@@ -43,4 +44,18 @@ qqnorm(devA$X1, main = "Echantillon devA", xlab = "Quantiles théoriques de loi 
 qqline(devA$X1)
 ```
 
-- Pour ce qui est de choix de $h$  
+- Le choix de la fenêtre $h$ est réalisé par validation croisée puisque $h_{cv} = arg min_{h}[\int \hat{f}^2_{n}(x)dx - \frac{2}{n}\sum_{i=1}^{n}\hat{f}_{-i}(X_{i})]$. $h_{}cv$ est alors égal à `r fn_chapeau$bw`. 
+
+
+
+# Question 3 
+
+$f(x)$ est une loi symétrique par rapport à $\theta_{0}$. Par conséquent  
+
+
+
+
+
+
+
+
