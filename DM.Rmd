@@ -44,6 +44,7 @@ qqnorm(devA$X1, main = "Echantillon devA", xlab = "Quantiles théoriques de loi 
 qqline(devA$X1)
 ```
 
+
 - Le choix de la fenêtre $h$ est réalisé par validation croisée puisque $h_{cv} = arg min_{h}[\int \hat{f}^2_{n}(x)dx - \frac{2}{n}\sum_{i=1}^{n}\hat{f}_{-i}(X_{i})]$. $h_{}cv$ est alors égal à `r fn_chapeau$bw`. 
 
 
@@ -55,7 +56,44 @@ $f(x)$ est une loi symétrique par rapport à $\theta_{0}$. Par conséquent
 
 
 
+#Partie B
 
+##Question 1
+
+Sachant que les données observées sont issues d'une régression linéaire,que nos valeurs manquantes sont en fait des réponses et que l'hypothèse des observations MAR est satisfaite on a :
+
+$Y=m(X)+eps, E(eps|X)=0 => rho(Y,X)=Y-m(X)$ et $Y||D,X$ si $D=0,1$
+
+On souhaite estimer l'esperance de Y donc on a le systeme suivant;
+
+\left \{
+\begin{array}{rcl}
+E[Y-alpha0]=0\\
+D||Y,X
+\end{array}
+\right
+=> 
+\left \{
+\begin{array}{rcl}
+E[(D/p(X)*(Y-alpha0)]=0\\
+E[(D/p(X))-1|X]=0
+\end{array}
+\right
+
+
+$$\left \{
+\begin{array}{rcl}
+E[rho(Y,X,theta)|X]=0\\
+D||Y,X
+\end{array}
+\right                             à enlever
+=> 
+\left \{
+\begin{array}{rcl}
+E[D*rho(Y,X,theta)|X]=0\\
+E(D|Y,X)=p(X)
+\end{array}
+\right$$
 
 
 

@@ -44,3 +44,42 @@ mise(c,d)
 
 mise(data,kernel,discreteApproximation=TRUE)
 MISE(x=a, xgrid=data$V1,lambda = 0,)
+
+
+
+
+# PArtie B ----------------------------------------------------------------
+
+dataB<-read.table("donnees_source/devB.txt")
+
+summary(dataB)
+barplot(dataB$V1)
+
+
+hist(dataB$V1)
+
+a<-mean(ksmooth(dataB$V2,dataB$V1, kernel = "box", bandwidth = 1,
+           range.x = range(dataB$V2)))
+#problme de NA
+
+
+
+plot(ksmooth(dataB$V2,dataB$V1, kernel = "box", bandwidth ="Rule of thumb",
+        range.x = range(dataB$V2)),col="red")
+lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 1,
+              range.x = range(dataB$V2)),col="blue")
+#je ne trouve pas et ne sait pas quelle bw choisir 
+
+#trouvé sur internet 
+x <- xx <- dataB$V1
+x[i.out <- sample(length(x), 10)] <- NA
+doR <- density(x, bw = 0.15, na.rm = TRUE)
+plot(doR, col = "blue")
+points(xx[i.out], rep(0.01, 10))
+
+
+plot(ksmooth(dataB$V2,xx, kernel = "box", bandwidth =1,
+             range.x = range(dataB$V2)),col="red")
+lines(ksmooth(dataB$V2,xx, kernel = "normal", bandwidth = 1,
+              range.x = range(dataB$V2)),col="blue")
+
