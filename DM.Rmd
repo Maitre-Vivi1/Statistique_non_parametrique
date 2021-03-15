@@ -44,3 +44,46 @@ qqline(devA$X1)
 ```
 
 - Pour ce qui est de choix de $h$  
+
+
+
+#Partie B
+
+##Question 1
+
+Sachant que les données observées sont issues d'une régression linéaire,que nos valeurs manquantes sont en fait des réponses et que l'hypothèse des observations MAR est satisfaite on a :
+
+$Y=m(X)+eps, E(eps|X)=0 => rho(Y,X)=Y-m(X)$ et $Y||D,X$ si $D=0,1$
+
+On souhaite estimer l'esperance de Y donc on a le systeme suivant;
+
+\left \{
+\begin{array}{rcl}
+E[Y-alpha0]=0\\
+D||Y,X
+\end{array}
+\right
+=> 
+\left \{
+\begin{array}{rcl}
+E[(D/p(X)*(Y-alpha0)]=0\\
+E[(D/p(X))-1|X]=0
+\end{array}
+\right
+
+
+$$\left \{
+\begin{array}{rcl}
+E[rho(Y,X,theta)|X]=0\\
+D||Y,X
+\end{array}
+\right                             à enlever
+=> 
+\left \{
+\begin{array}{rcl}
+E[D*rho(Y,X,theta)|X]=0\\
+E(D|Y,X)=p(X)
+\end{array}
+\right$$
+
+
