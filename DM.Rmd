@@ -17,7 +17,7 @@ Le meilleur estimateur de ${f}(x)$ au sens de l'erreur quadratique moyenne inté
 
 ```{r, echo=FALSE, message=FALSE}
 library(readr)
-devA <- read_csv("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
+devA <- read_csv("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
 ```
 
 
@@ -86,34 +86,42 @@ $Y=m(X)+eps, E(eps|X)=0 => rho(Y,X)=Y-m(X)$ et $Y||D,X$ si $D=0,1$
 
 On souhaite estimer l'esperance de Y donc on a le systeme suivant;
 
-<!-- \left \{ -->
-<!-- \begin{array}{rcl} -->
-<!-- E[Y-alpha0]=0\\ -->
-<!-- D||Y,X -->
-<!-- \end{array} -->
-<!-- \right -->
-<!-- =>  -->
-<!-- \left \{ -->
-<!-- \begin{array}{rcl} -->
-<!-- E[(D/p(X)*(Y-alpha0)]=0\\ -->
-<!-- E[(D/p(X))-1|X]=0 -->
-<!-- \end{array} -->
-<!-- \right -->
+
+\left \{
+\begin{array}{rcl}
+E[Y-alpha0]=0\\
+D||Y,X
+\end{array}
+\right
+=> 
+\left \{
+\begin{array}{rcl}
+E[(D/p(X)*(Y-alpha0)]=0\\
+E[(D/p(X))-1|X]=0
+\end{array}
+\right
 
 
-<!-- $$\left \{ -->
-<!-- \begin{array}{rcl} -->
-<!-- E[rho(Y,X,theta)|X]=0\\ -->
-<!-- D||Y,X -->
-<!-- \end{array} -->
-<!-- \right                             à enlever -->
-<!-- =>  -->
-<!-- \left \{ -->
-<!-- \begin{array}{rcl} -->
-<!-- E[D*rho(Y,X,theta)|X]=0\\ -->
-<!-- E(D|Y,X)=p(X) -->
-<!-- \end{array} -->
-<!-- \right$$ -->
+```{r}
+library(zoo)
+dataB<-read.table("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
 
+
+dataB$V1<-na.aggregate(dataB$V1,fUN=median)
+
+
+plot(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth =0.2,
+             range.x = range(dataB$V2)),ylim=c(min(dataB$V1),max(dataB$V1)),col="red")
+lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 1,
+              range.x = range(dataB$V2)),col="blue")
+lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 0.5,
+              range.x = range(dataB$V2)),col="green")
+lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 2,
+              range.x = range(dataB$V2)),col="skyblue")
+lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 5,
+              range.x = range(dataB$V2)),col="pink")
+abline(h=0.5,col="black")
+
+```
 
 
