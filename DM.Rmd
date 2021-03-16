@@ -2,7 +2,7 @@
 title: "DM"
 author: "Vivien & Louis"
 date: "01/03/2021"
-output: html_document
+output:  pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -25,6 +25,7 @@ devA <- read_csv("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\don
 ```{r, echo = FALSE, warning=FALSE}
 fn_chapeau <- density(devA$X1, bw="ucv", adjust=1, kernel="gaussian") 
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien")
+plot(density(devA$X1, bw="sj", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien et fenêtre plug-in")
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="rectangular"), main = "Estimation de f(x) par noyau rectangulaire")
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="triangular"), main = "Estimation de f(x) par noyau triangulaire")
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="epanechnikov"), main = "Estimation de f(x) par noyau epanechnikov")
@@ -56,13 +57,22 @@ $f(x)$ est une loi symétrique par rapport à $\theta_{0}$. Par conséquent, on 
 ```{r, echo=FALSE, warning=FALSE}
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien");
 abline(v = fn_chapeau$x[which(fn_chapeau$y == max(fn_chapeau$y))], col = "red")
+
+plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien");
+abline(v = mean(devA$X1), col = "red")
 ```
 
 On approxime alors $\theta_{0}$ par $\theta_{0}^{approx} =$ `r fn_chapeau$x[which(fn_chapeau$y == max(fn_chapeau$y))]`
+ou par la moyenne empirique : $\bar{X}_{n} =$ `r mean(devA$X1)` puisque que $\theta_{0}$ est l'espérance de la loi symétrique $f(x)$.
 
 
 # Question 4 
 
+On peut faire mieux que ces approximations :
+
+```{r, echo=FALSE}
+
+```
 
 
 
@@ -76,34 +86,34 @@ $Y=m(X)+eps, E(eps|X)=0 => rho(Y,X)=Y-m(X)$ et $Y||D,X$ si $D=0,1$
 
 On souhaite estimer l'esperance de Y donc on a le systeme suivant;
 
-\left \{
-\begin{array}{rcl}
-E[Y-alpha0]=0\\
-D||Y,X
-\end{array}
-\right
-=> 
-\left \{
-\begin{array}{rcl}
-E[(D/p(X)*(Y-alpha0)]=0\\
-E[(D/p(X))-1|X]=0
-\end{array}
-\right
+<!-- \left \{ -->
+<!-- \begin{array}{rcl} -->
+<!-- E[Y-alpha0]=0\\ -->
+<!-- D||Y,X -->
+<!-- \end{array} -->
+<!-- \right -->
+<!-- =>  -->
+<!-- \left \{ -->
+<!-- \begin{array}{rcl} -->
+<!-- E[(D/p(X)*(Y-alpha0)]=0\\ -->
+<!-- E[(D/p(X))-1|X]=0 -->
+<!-- \end{array} -->
+<!-- \right -->
 
 
-$$\left \{
-\begin{array}{rcl}
-E[rho(Y,X,theta)|X]=0\\
-D||Y,X
-\end{array}
-\right                             à enlever
-=> 
-\left \{
-\begin{array}{rcl}
-E[D*rho(Y,X,theta)|X]=0\\
-E(D|Y,X)=p(X)
-\end{array}
-\right$$
+<!-- $$\left \{ -->
+<!-- \begin{array}{rcl} -->
+<!-- E[rho(Y,X,theta)|X]=0\\ -->
+<!-- D||Y,X -->
+<!-- \end{array} -->
+<!-- \right                             à enlever -->
+<!-- =>  -->
+<!-- \left \{ -->
+<!-- \begin{array}{rcl} -->
+<!-- E[D*rho(Y,X,theta)|X]=0\\ -->
+<!-- E(D|Y,X)=p(X) -->
+<!-- \end{array} -->
+<!-- \right$$ -->
 
 
 
