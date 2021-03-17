@@ -2,7 +2,7 @@
 title: "DM"
 author: "Vivien & Louis"
 date: "01/03/2021"
-output:  pdf_document
+output:  html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -17,9 +17,8 @@ Le meilleur estimateur de ${f}(x)$ au sens de l'erreur quadratique moyenne inté
 
 ```{r, echo=FALSE, message=FALSE}
 library(readr)
-devA <- read_csv("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
+devA <- read_csv("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
 ```
-
 
 
 ```{r, echo = FALSE, warning=FALSE}
@@ -70,10 +69,7 @@ ou par la moyenne empirique : $\bar{X}_{n} =$ `r mean(devA$X1)` puisque que $\th
 
 On peut faire mieux que ces approximations :
 
-```{r, echo=FALSE}
-
-```
-
+$\bar{X}_n$
 
 
 #Partie B
@@ -102,16 +98,21 @@ E[(D/p(X))-1|X]=0
 \right
 
 
-```{r}
+```{r, echo=FALSE}
 library(zoo)
-dataB<-read.table("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
+dataB<-read.table("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
+
+```
+
+
+```{r }
 
 
 dataB$V1<-na.aggregate(dataB$V1,fUN=median)
 
 
-plot(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth =0.2,
-             range.x = range(dataB$V2)),ylim=c(min(dataB$V1),max(dataB$V1)),col="red")
+plot(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth ="0.2",
+             range.x = range(dataB$V2)),ylim=c(min(dataB$V1),max(dataB$V1)),col="red", type = "l")
 lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 1,
               range.x = range(dataB$V2)),col="blue")
 lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 0.5,
