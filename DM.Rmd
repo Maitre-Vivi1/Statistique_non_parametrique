@@ -77,6 +77,11 @@ On peut faire mieux que ces approximations :
 
 
 #Partie B
+```{r,echo=FALSE}
+dataB<-read.table("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
+
+```
+
 
 #Question 1
 
@@ -97,9 +102,155 @@ ce qui nous donne l'estimateur $\hat m_n$ de m en simplifiant:
 
 $\hat p_n(x)=\frac{\sum D_i Y_i K(\frac {x-X_i}{h})}{\sum D_iK(\frac {x-X_i}{h})}$
 
-On cherche à écrire un programme permettant de calculer l'estimateur $\hat \alpha_n$ de $\alpha =E(Y)$.
+On cherche à écrire un programme permettant de calculer l'estimateur $\hat \alpha_n$ de $\alpha_0 =E(Y)$. On a calculé deuc estimateurs de $\alpha_0$ tels que $\alpha1_n= \sum \hat m(X_i)/n$ et $\alpha2_n= \frac {\sum [\frac{D_i Y_i}{\hat p(X_i)}+(1-\frac {D_i}{\hat p(X_i)})\hat m(X_i)]}{n}$
 
-`r theta_t`
+
+```{r,echo=FALSE, warning=FALSE}
+NW<-function(x,h=5){
+  a<-c()
+  kernel<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      a[i]<-0}
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      a[i]<-dataB$V1[i]*kernel[i]}
+    
+    
+  }
+  
+  numerateur= sum(a)
+  denominateur= sum(kernel)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+
+
+p_hat<-function(x,h=5){
+  kernel<-c()
+  kernel2<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      }
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      
+      }
+    
+    kernel2[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    
+  }
+  
+  numerateur= sum(kernel)
+  denominateur= sum(kernel2)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}NW<-function(x,h=5){
+  a<-c()
+  kernel<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      a[i]<-0}
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      a[i]<-dataB$V1[i]*kernel[i]}
+    
+    
+  }
+  
+  numerateur= sum(a)
+  denominateur= sum(kernel)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+
+
+p_hat<-function(x,h=5){
+  kernel<-c()
+  kernel2<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      }
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      
+      }
+    
+    kernel2[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    
+  }
+  
+  numerateur= sum(kernel)
+  denominateur= sum(kernel2)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+```
+
+Pour ceci, nous avons construit les fonctions retournant respectivement $\hat p$ et $\hat m$ pour un certain x et un paramètre de lissage h en appliquant la contrainte D=1.Nous avons choisi tout d'abord h=5 d'après un critère graphique mais nous calculerons sa valeur optimale par une validation croisée ultérieurement.
+```{r,echo=FALSE}
+phat<-sapply(dataB$V2,p_hat)
+Nadi<-sapply(dataB$V2, NW)
+
+alpha1_n<-sum(Nadi)/200
+
+
+alpha2_n<-c()
+for (i in 1:200){
+  if (is.na(dataB$V1[i])){
+    alpha2_n[i]<-Nadi[i]
+  }
+  else{
+    alpha2_n[i]<-dataB$V1[i]/phat[i]+(1-1/phat[i])*Nadi[i]
+  }
+  
+}
+alpha2_n<-sum(alpha2_n)/200
+
+```
+
+
+Puis, il a fallu appliquer ces fonstions à l'ensemble des $X_i$ avec la fonction sapply() retournant ainsi un vecteur de valeurs.
+Il suffit ensuite de construire les estimateurs $\alpha1_n$ et $\alpha2_n$ avec ces valeurs
+
+Avec h=5 on obtient $\alpha1_n$ =`r alpha1_n` et $\alpha2_n$= `r alpha2_n` 
+
+Nous calculons enuite le paramètre de lissage h optimal par validation croisée. l'estimation de h par la validation croisée s'écrit $h_CV=\argmin \frac{1}{n}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

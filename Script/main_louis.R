@@ -147,8 +147,58 @@ thetat_tild2<-sum(theta_tild2)/200
 
 
 
-# estimation h ------------------------------------------------------------
+# estimation des h ------------------------------------------------------------
+P_moinsI<-function(x,h=1,k){
+  D<-c()
+  p<-c()
+  kernel<-c()
+  for (i in 1:200){
+    kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    if (is.na(dataB$V1[i])){
+      D[i]<-0
+      p[i]<-0}
+    else{
+      D[i]<-1
+      p[i]<-D[i]*kernel[i]}
+  }
+  p<-p[-k]
+  
+  numerateur= sum(p)
+  denominateur= sum(kernel)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+  
+}
 
+
+
+h_p_cv<-function(h){
+  summum<-c()
+  for (k in 1:200){
+    if (is.na(dataB$V1[k])){
+      summum[k]<-P_moinsI(dataB$V2[k],h,k)**2
+    }
+    else{  
+      summum[k]<-(1-P_moinsI(dataB$V2[k],h,k))**2
+    }}
+  return(sum(summum)/length(summum))
+}
+sequence<-seq(10,100,10)
+h_p_cv(Inf)
+estim_hp_cv<-sapply(sequence,h_p_cv)
+
+
+min_hp_cv<-estim_hp_cv[1]
+h_p_min<-sequence[1]
+for (i in 1:length(estim_hp_cv)){
+  
+  if (estim_hp_cv[i]<min_hp_cv){
+    min_hp_cv<-estim_hp_cv[i]
+    h_p_min<-sequence[i]
+  } 
+}
+print(h_p_min)
 
 NW_moinsI<-function(x,h=1,k){
   a<-c()
@@ -178,7 +228,7 @@ h_cv<-function(h){
   summum<-c()
   for (k in 1:200){
     if (is.na(dataB$V1[k])){
-      summum[k]<-0
+      summum[k]<-NW_moinsI(dataB$V2[k],h,k)**2
     }
     else{  
       summum[k]<-(dataB$V1[k]-NW_moinsI(dataB$V2[k],h,k))**2
