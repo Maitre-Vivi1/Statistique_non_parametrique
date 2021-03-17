@@ -165,6 +165,7 @@ NW_moinsI<-function(x,h=1,k){
     }
     
   a<-a[-k]
+  kernel <- kernel[-k]
   
   numerateur= sum(a)
   denominateur= sum(kernel)
@@ -178,12 +179,12 @@ h_cv<-function(h){
   summum<-c()
   for (k in 1:200){
     if (is.na(dataB$V1[k])){
-      summum[k]<-0
+      summum[k]<-0 # pmoinsI ^2 
     }
     else{  
-      summum[k]<-(dataB$V1[k]-NW_moinsI(dataB$V2[k],h,k))**2
+      summum[k]<-(dataB$V1[k]-NW_moinsI(dataB$V2[k],h,k))**2 # (1 - pmoinsI)^2
     }}
-  summum=summum[summum!=0]
+  summum=summum[summum!=0] #
   return(sum(summum)/length(summum))
 }
 sequence<-seq(1,10,0.1)
