@@ -56,7 +56,7 @@ dataB$V1<-na.aggregate(dataB$V1,fUN=median)
 #               range.x = range(dataB$V2)),col="blue")
 
 plot(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth =0.2,
-             range.x = range(dataB$V2)),ylim=c(min(dataB$V1),max(dataB$V1)),col="red")
+             range.x = range(dataB$V2)),ylim=c(min(dataB$V1),max(dataB$V1)),type="l",col="red")
 lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 1,
               range.x = range(dataB$V2)),col="blue")
 lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 0.5,
@@ -65,77 +65,213 @@ lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 2,
               range.x = range(dataB$V2)),col="skyblue")
 lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 5,
               range.x = range(dataB$V2)),col="pink")
+lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 115,
+              range.x = range(dataB$V2)),col="grey")
 abline(h=0.5,col="black")
 
 
 
 sum(dataB$V1)/200
 
+plot(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth =1.4,
+             range.x = range(dataB$V2)),ylim=c(min(dataB$V1),max(dataB$V1)),type="l",col="red")
+plot(density(dataB$V1,kernel="gaussian",bw=1.4))
+# Estimateur E(y)  --------------------------------------------------------
 
 
-
-NW<-function(x,h=1){
-  a=list()
-  kernel=list()
+NW<-function(x,h=5){
+  a<-c()
+  kernel<-c()
   
-  for (i in 200){
-    kernel<-exp((((x-dataB$V2[i])/h)**2)/2)/2*3.69
-    a<-dataB$V1[i]*kernel[i]
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      a[i]<-0}
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      a[i]<-dataB$V1[i]*kernel[i]}
+    
     
   }
   
   numerateur= sum(a)
   denominateur= sum(kernel)
-  NW=numerateur/denominateur
+  NaWa=numerateur/denominateur
   
-  return(NW)
+  return(NaWa)
 }
 
 
+p_hat<-function(x,h=5){
+  kernel<-c()
+  kernel2<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      }
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      
+      }
+    
+    kernel2[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    
+  }
+  
+  numerateur= sum(kernel)
+  denominateur= sum(kernel2)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+phat<-sapply(dataB$V2,p_hat)
 Nadi<-sapply(dataB$V2, NW)
 
+theta_tild1<-sum(Nadi)/200
 
 
-# data<-read.table("donnees_source/devA.txt")
-# 
-# summary(data)
-# barplot(data$V1)
-# 
-# 
-# hist(data$V1)
-# 
-# data<-data %>% 
-#   filter(-10<V1 & V1<20)
-# 
-# test<- data %>% 
-#   filter(-5<V1 & V1<7)
-# 
-# a<-hist(test$V1)
-# b<-curve(dnorm(x),-10,10)
-# points(a,b)
-# 
-# plot(density(data$V1,bw=.7,adjust=1,kernel="rectangular"),xlim=c(0,5),
-#      col="red",xlab="t",ylab="f(t)",main="Fig. 1. Estimations de densité par noyaux",sub="Fenêtre h=0,7");
-# lines(density(data$V1,bw=.7,adjust=1,kernel="triangular"),col="green4");
-# lines(density(data$V1,bw=.7,adjust=1,kernel="gaussian"),col="blue");
-# legend(x="topright",y=NULL,legend=c("Unif.","Trian.","gauss.",""),text.col=c("red","green4","blue"));
-# 
-# 
-# plot(density(data$V1,bw=.7,adjust=1,kernel="cosine"),col="green4",xlim=c(0,5));
-# lines(density(data$V1,bw=.7,adjust=1,kernel="biweight"),col="blue");
-# lines(density(data$V1,bw=.7,adjust=1,kernel="epanechnikov"),col="red",xlim=c(0,5));
-# 
-# a <- density(devA$X1, kernel = "gaussian", bw = "SJ")
-# b <- density(devA$X1)
-# 
-# c <- boundedDensity(x = devA$X1, densities =  a$x[1:200], lower.limit = min(devA$X1), upper.limit = max(devA$X1))
-# d <-  boundedDensity(x = devA$X1, densities =  b$x[1:200], lower.limit = min(devA$X1), upper.limit = max(devA$X1))
-# 
-# mise(c,d)
-# 
-# mise(data,kernel,discreteApproximation=TRUE)
-# MISE(x=a, xgrid=data$V1,lambda = 0,)
-# 
-# 
-# 
-# 
+theta_tild2<-c()
+for (i in 1:200){
+  if (is.na(dataB$V1[i])){
+    theta_tild2[i]<-Nadi[i]
+  }
+  else{
+    theta_tild2[i]<-dataB$V1[i]/phat[i]+(1-1/phat[i])*Nadi[i]
+  }
+  
+}
+thetat_tild2<-sum(theta_tild2)/200
+
+
+
+# estimation h ------------------------------------------------------------
+
+
+NW_moinsI<-function(x,h=1,k){
+  a<-c()
+  kernel<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      a[i]<-0}
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      a[i]<-dataB$V1[i]*kernel[i]}
+    }
+    
+  a<-a[-k]
+  
+  numerateur= sum(a)
+  denominateur= sum(kernel)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+
+
+h_cv<-function(h){
+  summum<-c()
+  for (k in 1:200){
+    if (is.na(dataB$V1[k])){
+      summum[k]<-0
+    }
+    else{  
+      summum[k]<-(dataB$V1[k]-NW_moinsI(dataB$V2[k],h,k))**2
+    }}
+  summum=summum[summum!=0]
+  return(sum(summum)/length(summum))
+}
+sequence<-seq(1,10,0.1)
+estim_hcv<-sapply(sequence,h_cv)
+
+
+min_hcv<-estim_hcv[1]
+h_min<-sequence[1]
+for (i in 1:length(estim_hcv)){
+  
+  if (estim_hcv[i]<min_hcv){
+    min_hcv<-estim_hcv[i]
+    h_min<-sequence[i]
+  } 
+}
+print(h_min)
+
+sequence<-seq(2,4,0.01)
+sequence<-seq(3.10,3.12,0.0001)
+h_validcroisee<-h_min
+
+
+
+# final estim e(Y) --------------------------------------------------------
+
+NW<-function(x,h=h_validcroisee){
+  a<-c()
+  kernel<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      a[i]<-0}
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      a[i]<-dataB$V1[i]*kernel[i]}
+    
+    
+  }
+  
+  numerateur= sum(a)
+  denominateur= sum(kernel)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+
+
+p_hat<-function(x,h=h_validcroisee){
+  kernel<-c()
+  kernel2<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+    }
+    
+    else{
+      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      
+    }
+    
+    kernel2[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    
+  }
+  
+  numerateur= sum(kernel)
+  denominateur= sum(kernel2)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+phat<-sapply(dataB$V2,p_hat)
+Nadi<-sapply(dataB$V2,NW)
+
+theta_tild1<-sum(Nadi)/200
+
+
+theta_tild2<-c()
+for (i in 1:200){
+  if (is.na(dataB$V1[i])){
+    theta_tild2[i]<-Nadi[i]
+  }
+  else{
+    theta_tild2[i]<-dataB$V1[i]/phat[i]+(1-1/phat[i])*Nadi[i]
+  }
+  
+}
+theta_tild2<-sum(theta_tild2)/200
+
