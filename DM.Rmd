@@ -82,24 +82,25 @@ On peut faire mieux que ces approximations :
 
 Sachant que les données observées sont issues d'une régression linéaire,que nos valeurs manquantes sont en fait des réponses et que l'hypothèse des observations MAR est satisfaite on a :
 
-$Y=m(X)+eps, E(eps|X)=0 => rho(Y,X)=Y-m(X)$ et $Y||D,X$ si $D=0,1$
+$Y=m(X)+eps, E(eps|X)=0$ et $Y||D,X$ si $D=0,1$
 
-On souhaite estimer l'esperance de Y donc on a le systeme suivant;
+On souhaite estimer l'esperance de Y avec l'estimateur de Nadaraya-Watson:
+$\hat r(u)=\frac{\sum Z_iK(\frac{u-U_i}{h})}{\sum K(\frac{u-U_i}{h})}$ avec K le noyau et h la fenêtre.
 
+On sait que $P(X)=P(D=1|X)=E(D|X)$ donc on a :
 
-\left \{
-\begin{array}{rcl}
-E[Y-alpha0]=0\\
-D||Y,X
-\end{array}
-\right
-=> 
-\left \{
-\begin{array}{rcl}
-E[(D/p(X)*(Y-alpha0)]=0\\
-E[(D/p(X))-1|X]=0
-\end{array}
-\right
+$m(X)=E(Y|X)=\frac {E(DY|X)}{E(D|X)}$. On applique l'estimateur de Nadaraya-Watson sur E(DY|X) et E(D|X) et on obtient 
+
+$E(DY|X)=\frac{\sum D_i Y_i K(.)}{\sum K(.)}$ et $E(D|X)=\hat p(X)=\frac{\sum D_i K(.)}{\sum K(.)}$
+
+ce qui nous donne l'estimateur $\hat m_n$ de m en simplifiant:
+
+$\hat p_n(x)=\frac{\sum D_i Y_i K(\frac {x-X_i}{h})}{\sum D_iK(\frac {x-X_i}{h})}$
+
+On cherche à écrire un programme permettant de calculer l'estimateur $\hat \alpha_n$ de $\alpha =E(Y)$.
+
+`r theta_t`
+
 
 
 ```{r}
