@@ -116,7 +116,7 @@ NW<-function(x,h=5){
       a[i]<-0}
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
       a[i]<-dataB$V1[i]*kernel[i]}
     
     
@@ -140,11 +140,11 @@ p_hat<-function(x,h=5){
       }
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
       
       }
     
-    kernel2[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    kernel2[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
     
   }
   
@@ -163,7 +163,7 @@ p_hat<-function(x,h=5){
       a[i]<-0}
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
       a[i]<-dataB$V1[i]*kernel[i]}
     
     
@@ -187,11 +187,11 @@ p_hat<-function(x,h=5){
       }
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
       
       }
     
-    kernel2[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    kernel2[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
     
   }
   
@@ -226,24 +226,236 @@ alpha2_n<-sum(alpha2_n)/200
 ```
 
 
-Puis, il a fallu appliquer ces fonstions à l'ensemble des $X_i$ avec la fonction sapply() retournant ainsi un vecteur de valeurs.
+Puis, il a fallu appliquer ces fonctions à l'ensemble des $X_i$ avec la fonction sapply() retournant ainsi un vecteur de valeurs.
 Il suffit ensuite de construire les estimateurs $\alpha1_n$ et $\alpha2_n$ avec ces valeurs
 
 Avec h=5 on obtient $\alpha1_n$ =`r alpha1_n` et $\alpha2_n$= `r alpha2_n` 
 
-Nous calculons enuite le paramètre de lissage h optimal par validation croisée. l'estimation de h par la validation croisée s'écrit $h_CV=\argmin \frac{1}{n}
+Nous calculons enuite le paramètre de lissage h optimal par validation croisée.
+
+
+#mettre l'explication de h_p_cv
+Calculons tout d'abord l'estimateur $h_{p_{CV}}$ le paramètre de lissage de $\hat p$.On a:
+$h_{p_{CV}}=argmin \frac{1}{n}\sum[D_i- \hat p_{n,h}^{(-i)}(X_i)]^2 $
+
+avec  $\hat p_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n D_j K(.)}{\sum \limits_{j\neq i}^n K(.)} $ 
+#expliquer la loi des gds nombres
+```{r}
+P_moinsI<-function(x,h=1,k){
+  D<-c()
+  p<-c()
+  kernel<-c()
+  for (i in 1:200){
+    kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
+    if (is.na(dataB$V1[i])){
+      D[i]<-0
+      p[i]<-0}
+    else{
+      D[i]<-1
+      p[i]<-D[i]*kernel[i]}
+  }
+  p<-p[-k]
+  
+  numerateur= sum(p)
+  denominateur= sum(kernel)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+  
+}
 
 
 
+h_p_cv<-function(h){
+  summum<-c()
+  for (k in 1:200){
+    if (is.na(dataB$V1[k])){
+      summum[k]<-P_moinsI(dataB$V2[k],h,k)**2
+    }
+    else{  
+      summum[k]<-(1-P_moinsI(dataB$V2[k],h,k))**2
+    }}
+  return(sum(summum)/length(summum))
+}
+```
+On construit un premier algorythme pour déterminer les  $\hat p_{n,h}^{(-i)}$ avec une fonction prenant en argument une observation x, un paramètre de lissage h=1 qui variera à l'avenir et un paramètre k permettant de retirer l'observation i. Cette fonction retourne la valeur de $\hat p_{n,h}^{(-i)}$ pour un $x_i$ fixé en vérifiant si $Y_i$ est observé.
+
+Une deuxième fonction prenant en argument h pour faire varier le paramètre de lissage et retournant la valeur $h_{p_{CV}}$ applique la fonction ci-dessus en différençiant les 200 $Y_i$ observés ou non.   
+
+```{r}
+sequence<-seq(1,20,1)
+h_p_cv(Inf)
+estim_hp_cv<-sapply(sequence,h_p_cv)
 
 
+min_hp_cv<-estim_hp_cv[1]
+h_p_min<-sequence[1]
+for (i in 1:length(estim_hp_cv)){
+  
+  if (estim_hp_cv[i]<min_hp_cv){
+    min_hp_cv<-estim_hp_cv[i]
+    h_p_min<-sequence[i]
+  } 
+}
+print(h_p_min)
+sequence<-seq(0.1,2,0.1)
+sequence<-seq(1,1.2,0.001)
+```
+En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c-a-d la valeur de h pour laquelle $h_{p_{CV}}$ est minimal. On trouve donc pour $h_{p_{CV}}$ la valeur
+`r h_p_min`
+
+l'estimation de h pour l'estimateur $\hat m$ par la validation croisée s'écrit$h_{CV}=argmin \frac{1}{n}\sum[\frac{Y_i}{\hat p_{n,h}^{(-i)}}- \hat m_{n,h}^{(-i)}(X_i)]^2 $
+
+ 
+$\hat m_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n Y_j K(.)}{\sum \limits_{j\neq i}^n K(.)} $
 
 
+Or dans notre cas, nous avons des valeurs manquantes. Mais grâce à la loi des grands nombres on peut écrire:
+$h_{CV}=argmin \frac{1}{n}\sum[D_iY_i- \hat m_{n,h}^{(-i)}(X_i)]^2 $ avec $\hat m_{n,h}^{(-i)}= \frac{\sum \limits_{j \neq i}^n  D_jK(.)}{\sum\limits_{j\neq i}^n D_jK(.)} $
+#les argmin marchent pas 
+
+Pour construire un algorithme permettant de determiner une approximation de h, il est néccessaire de construire $\hat m_{n,h}^{(-i)}$
+
+```{r,echo=FALSE}
+NW_moinsI<-function(x,h=1,k){
+  a<-c()
+  kernel<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      a[i]<-0}
+    
+    else{
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
+      a[i]<-dataB$V1[i]*kernel[i]}
+    }
+    
+  a<-a[-k]
+  kernel<-kernel[-k]
+  numerateur= sum(a)
+  denominateur= sum(kernel)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+
+h_cv<-function(h){
+  summum<-c()
+  for (k in 1:200){
+    if (is.na(dataB$V1[k])){
+      summum[k]<-NW_moinsI(dataB$V2[k],h,k)**2
+    }
+    else{  
+      summum[k]<-(dataB$V1[k]/P_moinsI(dataB$V2[k],h=1.069,k=k)-NW_moinsI(dataB$V2[k],h,k))**2
+    }}
+  summum=summum[summum!=0]
+  return(sum(summum)/length(summum))
+}
+
+```
+
+Dans la même logique que pour $h_{p_{CV}}$, on construit un premier algorythme pour déterminer les  $\hat m_{n,h}^{(-i)}$ avec une fonction prenant en argument une observation x, un paramètre de lissage h=1 qui variera à l'avenir et un paramètre k permettant de retirer l'observation i. Cette fonction retourne la valeur de $\hat m_{n,h}^{(-i)}$ pour un $x_i$ fixé en vérifiant si $Y_i$ est observé.
+
+Une deuxième fonction prenant en argument h pour faire varier le paramètre de lissage et retournant la valeur $h_{CV}$ applique la fonction ci-dessus en différençiant les 200 $Y_i$ observés ou non. Dans cette fonction, on applique la valeur optimale de $h_{p_{CV}}$ pour la valeur de $\hat p_{n,h}^{(-i)}$ calculée prédédemment. 
+
+```{r}
+sequence<-seq(0.1,1,0.1)
+estim_hcv<-sapply(sequence,h_cv)
 
 
+min_hcv<-estim_hcv[1]
+h_min<-sequence[1]
+for (i in 1:length(estim_hcv)){
+  
+  if (estim_hcv[i]<min_hcv){
+    min_hcv<-estim_hcv[i]
+    h_min<-sequence[i]
+  } 
+}
+print(h_min)
+
+sequence<-seq(2,4,0.01)
+sequence<-seq(3.10,3.12,0.0001)
+```
 
 
+En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c-a-d la valeur de h pour laquelle $h_{CV}$ est minimal. On trouve donc pour $h_{CV}$ la valeur
+`r h_min`
 
+On remplace ainsi ensuite la valeur h=5 par h=`r h_p_min` pour $\hat p$ et h=`r h_min` pour $\hat m$ dans les fonctions permettant de calculer ces estimateurs
+
+```{r}
+NW<-function(x,h=h_validcroisee){
+  a<-c()
+  kernel<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+      a[i]<-0}
+    
+    else{
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
+      a[i]<-dataB$V1[i]*kernel[i]}
+    
+    
+  }
+  
+  numerateur= sum(a)
+  denominateur= sum(kernel)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+
+
+p_hat<-function(x,h=h_validcroisee){
+  kernel<-c()
+  kernel2<-c()
+  
+  for (i in 1:200){
+    if (is.na(dataB$V1[i])){
+      kernel[i]<-0
+    }
+    
+    else{
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
+      
+    }
+    
+    kernel2[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
+    
+  }
+  
+  numerateur= sum(kernel)
+  denominateur= sum(kernel2)
+  NaWa=numerateur/denominateur
+  
+  return(NaWa)
+}
+phat<-sapply(dataB$V2,p_hat)
+Nadi<-sapply(dataB$V2,NW)
+
+theta_tild1<-sum(Nadi)/200
+
+
+theta_tild2<-c()
+for (i in 1:200){
+  if (is.na(dataB$V1[i])){
+    theta_tild2[i]<-Nadi[i]
+  }
+  else{
+    theta_tild2[i]<-dataB$V1[i]/phat[i]+(1-1/phat[i])*Nadi[i]
+  }
+  
+}
+theta_tild2<-sum(theta_tild2)/200
+
+```
+
+
+ on obtient $\alpha1_n$ =`r theta_tild1` et $\alpha2_n$= `r theta_tild2` 
 
 
 

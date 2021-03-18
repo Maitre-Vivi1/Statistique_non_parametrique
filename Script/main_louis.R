@@ -89,7 +89,7 @@ NW<-function(x,h=5){
       a[i]<-0}
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
       a[i]<-dataB$V1[i]*kernel[i]}
     
     
@@ -113,11 +113,11 @@ p_hat<-function(x,h=5){
       }
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
       
       }
     
-    kernel2[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    kernel2[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
     
   }
   
@@ -153,7 +153,7 @@ P_moinsI<-function(x,h=1,k){
   p<-c()
   kernel<-c()
   for (i in 1:200){
-    kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
     if (is.na(dataB$V1[i])){
       D[i]<-0
       p[i]<-0}
@@ -184,7 +184,7 @@ h_p_cv<-function(h){
     }}
   return(sum(summum)/length(summum))
 }
-sequence<-seq(10,100,10)
+sequence<-seq(1,20,1)
 h_p_cv(Inf)
 estim_hp_cv<-sapply(sequence,h_p_cv)
 
@@ -199,6 +199,9 @@ for (i in 1:length(estim_hp_cv)){
   } 
 }
 print(h_p_min)
+sequence<-seq(0.1,2,0.1)
+sequence<-seq(1,1.2,0.001)
+
 
 NW_moinsI<-function(x,h=1,k){
   a<-c()
@@ -210,12 +213,12 @@ NW_moinsI<-function(x,h=1,k){
       a[i]<-0}
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
       a[i]<-dataB$V1[i]*kernel[i]}
     }
     
   a<-a[-k]
-  
+  kernel<-kernel[-k]
   numerateur= sum(a)
   denominateur= sum(kernel)
   NaWa=numerateur/denominateur
@@ -231,12 +234,12 @@ h_cv<-function(h){
       summum[k]<-NW_moinsI(dataB$V2[k],h,k)**2
     }
     else{  
-      summum[k]<-(dataB$V1[k]-NW_moinsI(dataB$V2[k],h,k))**2
+      summum[k]<-(dataB$V1[k]/P_moinsI(dataB$V2[k],h=1.069,k=k)-NW_moinsI(dataB$V2[k],h,k))**2
     }}
   summum=summum[summum!=0]
   return(sum(summum)/length(summum))
 }
-sequence<-seq(1,10,0.1)
+sequence<-seq(0.1,1,0.1)
 estim_hcv<-sapply(sequence,h_cv)
 
 
@@ -269,7 +272,7 @@ NW<-function(x,h=h_validcroisee){
       a[i]<-0}
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
       a[i]<-dataB$V1[i]*kernel[i]}
     
     
@@ -293,11 +296,11 @@ p_hat<-function(x,h=h_validcroisee){
     }
     
     else{
-      kernel[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+      kernel[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
       
     }
     
-    kernel2[i]<-exp((((x-dataB$V2[i])/h)**2)/2)/sqrt(2*3.14)
+    kernel2[i]<-exp(-(((x-dataB$V2[i])/h)**2)/2)/sqrt(2*pi)
     
   }
   
