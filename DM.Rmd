@@ -17,7 +17,7 @@ Le meilleur estimateur de ${f}(x)$ au sens de l'erreur quadratique moyenne inté
 
 ```{r, echo=FALSE, message=FALSE}
 library(readr)
-devA <- read_csv("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
+devA <- read_csv("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
 ```
 
 
@@ -72,18 +72,18 @@ On peut faire mieux que ces approximations :
 $\bar{X}_n$
 
 
-#Partie B
+# Partie B
 ```{r,echo=FALSE}
 dataB<-read.table("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
 
 ```
 
 
-#Question 1
+# Question 1
 
-Sachant que les données observées sont issues d'une régression linéaire,que nos valeurs manquantes sont en fait des réponses et que l'hypothèse des observations MAR est satisfaite on a :
+Sachant que les données observées sont issues d'une régression, que nos valeurs manquantes sont en fait des réponses et que l'hypothèse des observations MAR est satisfaite on a :
 
-$Y=m(X)+eps, E(eps|X)=0$ et $Y||D,X$ si $D=0,1$
+$Y=m(X)+\epsilon$ , $ E( \epsilon |X)=0$ et $Y {\perp \!\!\! \perp}D,X$.
 
 On souhaite estimer l'esperance de Y avec l'estimateur de Nadaraya-Watson:
 $\hat r(u)=\frac{\sum Z_iK(\frac{u-U_i}{h})}{\sum K(\frac{u-U_i}{h})}$ avec K le noyau et h la fenêtre.
@@ -92,13 +92,13 @@ On sait que $P(X)=P(D=1|X)=E(D|X)$ donc on a :
 
 $m(X)=E(Y|X)=\frac {E(DY|X)}{E(D|X)}$. On applique l'estimateur de Nadaraya-Watson sur E(DY|X) et E(D|X) et on obtient 
 
-$E(DY|X)=\frac{\sum D_i Y_i K(.)}{\sum K(.)}$ et $E(D|X)=\hat p(X)=\frac{\sum D_i K(.)}{\sum K(.)}$
+$E(DY|X)=\frac{\sum D_i Y_i K(\frac {x-X_i}{h})}{\sum K(\frac {x-X_i}{h})}$ et $E(D|X)=\hat p(X)=\frac{\sum D_i K(\frac {x-X_i}{h})}{\sum K(\frac {x-X_i}{h})}$
 
 ce qui nous donne l'estimateur $\hat m_n$ de m en simplifiant:
 
-$\hat p_n(x)=\frac{\sum D_i Y_i K(\frac {x-X_i}{h})}{\sum D_iK(\frac {x-X_i}{h})}$
+$\hat m_n(x)=\frac{\sum D_i Y_i K(\frac {x-X_i}{h})}{\sum D_iK(\frac {x-X_i}{h})}$
 
-On cherche à écrire un programme permettant de calculer l'estimateur $\hat \alpha_n$ de $\alpha_0 =E(Y)$. On a calculé deuc estimateurs de $\alpha_0$ tels que $\alpha1_n= \sum \hat m(X_i)/n$ et $\alpha2_n= \frac {\sum [\frac{D_i Y_i}{\hat p(X_i)}+(1-\frac {D_i}{\hat p(X_i)})\hat m(X_i)]}{n}$
+On cherche à écrire un programme permettant de calculer l'estimateur $\hat \alpha_n$ de $\alpha_0 =E(Y)$. On a calculé deuc estimateurs de $\alpha_0$ tels que $\hat \alpha1_n= \sum \hat m(X_i)/n$ et $\hat \alpha2_n= \frac {1}{n}\sum [\frac{D_i Y_i}{\hat p(X_i)}+(1-\frac {D_i}{\hat p(X_i)})\hat m(X_i)]$
 
 
 ```{r,echo=FALSE, warning=FALSE}
@@ -149,7 +149,9 @@ p_hat<-function(x,h=5){
   NaWa=numerateur/denominateur
   
   return(NaWa)
-}NW<-function(x,h=5){
+}
+
+NW<-function(x,h=5){
   a<-c()
   kernel<-c()
   
@@ -223,20 +225,23 @@ alpha2_n<-sum(alpha2_n)/200
 
 
 Puis, il a fallu appliquer ces fonctions à l'ensemble des $X_i$ avec la fonction sapply() retournant ainsi un vecteur de valeurs.
-Il suffit ensuite de construire les estimateurs $\alpha1_n$ et $\alpha2_n$ avec ces valeurs
+Il suffit ensuite de construire les estimateurs $\hat\alpha1_n$ et $\hat \alpha2_n$ avec ces valeurs
 
-Avec h=5 on obtient $\alpha1_n$ =`r alpha1_n` et $\alpha2_n$= `r alpha2_n` 
+Avec h=5 on obtient $\hat \alpha1_n$ =`r alpha1_n` et $\hat \alpha2_n$= `r alpha2_n` 
 
-Nous calculons enuite le paramètre de lissage h optimal par validation croisée.
+Nous calculons ensuite le paramètre de lissage h optimal par validation croisée.
 
 
-#mettre l'explication de h_p_cv
-Calculons tout d'abord l'estimateur $h_{p_{CV}}$ le paramètre de lissage de $\hat p$.On a:
-$h_{p_{CV}}=argmin \frac{1}{n}\sum[D_i- \hat p_{n,h}^{(-i)}(X_i)]^2 $
 
-avec  $\hat p_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n D_j K(.)}{\sum \limits_{j\neq i}^n K(.)} $ 
-#expliquer la loi des gds nombres
-```{r}
+Calculons tout d'abord l'estimateur $h_{p_{CV}}$ le paramètre de lissage de $\hat p$.
+On fait une validation croisée en leave-1-out en prenant:
+
+$h_{p_{CV}}=\arg\min_h \frac{1}{n}\sum[D_i-\hat p_{n,h}^{(-i)}(X_i)]^2$ 
+
+avec  $\hat p_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n D_j K(.)}{\sum \limits_{j\neq i}^n K(.)}$ 
+
+
+```{r, echo=FALSE}
 P_moinsI<-function(x,h=1,k){
   D<-c()
   p<-c()
@@ -278,7 +283,7 @@ On construit un premier algorythme pour déterminer les  $\hat p_{n,h}^{(-i)}$ a
 
 Une deuxième fonction prenant en argument h pour faire varier le paramètre de lissage et retournant la valeur $h_{p_{CV}}$ applique la fonction ci-dessus en différençiant les 200 $Y_i$ observés ou non.   
 
-```{r}
+```{r, echo=FALSE}
 sequence<-seq(1,20,1)
 h_p_cv(Inf)
 estim_hp_cv<-sapply(sequence,h_p_cv)
@@ -297,18 +302,15 @@ print(h_p_min)
 sequence<-seq(0.1,2,0.1)
 sequence<-seq(1,1.2,0.001)
 ```
-En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c-a-d la valeur de h pour laquelle $h_{p_{CV}}$ est minimal. On trouve donc pour $h_{p_{CV}}$ la valeur
-`r h_p_min`
+En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c'est à dire la valeur de h pour laquelle $h_{p_{CV}}$ est $\arg\min_{h} \frac{1}{n}\sum[D_i- \hat p_{n,h}^{(-i)}(X_i)]^2$ . On trouve donc pour $h_{p_{CV}}$ la valeur 1.069
 
-l'estimation de h pour l'estimateur $\hat m$ par la validation croisée s'écrit$h_{CV}=argmin \frac{1}{n}\sum[\frac{Y_i}{\hat p_{n,h}^{(-i)}}- \hat m_{n,h}^{(-i)}(X_i)]^2 $
 
+Maintenant qu'on a trouvé le $h_{p_{CV}}$ par validation croisée pour$\hat p$ on va faire une validation croisée pour $\hat m$.
+l'estimation de h pour l'estimateur $\hat m$ par la validation croisée qui va 
+
+vérifier $h_{CV}=\arg\min_{h} \frac{1}{n}\sum[\frac{D_iY_i}{\hat p_{n,h}^{(-i)}}- \hat m_{n,h}^{(-i)}(X_i)]^2$
  
-$\hat m_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n Y_j K(.)}{\sum \limits_{j\neq i}^n K(.)} $
-
-
-Or dans notre cas, nous avons des valeurs manquantes. Mais grâce à la loi des grands nombres on peut écrire:
-$h_{CV}=argmin \frac{1}{n}\sum[D_iY_i- \hat m_{n,h}^{(-i)}(X_i)]^2 $ avec $\hat m_{n,h}^{(-i)}= \frac{\sum \limits_{j \neq i}^n  D_jK(.)}{\sum\limits_{j\neq i}^n D_jK(.)} $
-#les argmin marchent pas 
+avec $\hat m_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n D_jY_j K(.)}{\sum \limits_{j\neq i}^n D_jK(.)}$
 
 Pour construire un algorithme permettant de determiner une approximation de h, il est néccessaire de construire $\hat m_{n,h}^{(-i)}$
 
@@ -355,7 +357,7 @@ Dans la même logique que pour $h_{p_{CV}}$, on construit un premier algorythme 
 
 Une deuxième fonction prenant en argument h pour faire varier le paramètre de lissage et retournant la valeur $h_{CV}$ applique la fonction ci-dessus en différençiant les 200 $Y_i$ observés ou non. Dans cette fonction, on applique la valeur optimale de $h_{p_{CV}}$ pour la valeur de $\hat p_{n,h}^{(-i)}$ calculée prédédemment. 
 
-```{r}
+```{r, echo=FALSE}
 sequence<-seq(0.1,1,0.1)
 estim_hcv<-sapply(sequence,h_cv)
 
@@ -376,13 +378,13 @@ sequence<-seq(3.10,3.12,0.0001)
 ```
 
 
-En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c-a-d la valeur de h pour laquelle $h_{CV}$ est minimal. On trouve donc pour $h_{CV}$ la valeur
-`r h_min`
+En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c-a-d la valeur de h pour laquelle $h_{CV}$ est minimal. On trouve donc pour $h_{CV}$ la valeur 5.09
 
-On remplace ainsi ensuite la valeur h=5 par h=`r h_p_min` pour $\hat p$ et h=`r h_min` pour $\hat m$ dans les fonctions permettant de calculer ces estimateurs
+On remplace ainsi ensuite la valeur h=5 par h=1.069 pour $\hat p$ et h=5.08 pour $\hat m$ dans les fonctions permettant de calculer ces estimateurs
 
-```{r}
-NW<-function(x,h=h_validcroisee){
+```{r, echo= FALSE}
+h_validcroisee=1.069
+NW<-function(x,h=5.08){
   a<-c()
   kernel<-c()
   
@@ -406,7 +408,7 @@ NW<-function(x,h=h_validcroisee){
 }
 
 
-p_hat<-function(x,h=h_validcroisee){
+p_hat<-function(x,h=1.069){
   kernel<-c()
   kernel2<-c()
   
@@ -450,11 +452,9 @@ theta_tild2<-sum(theta_tild2)/200
 
 ```
 
+On obtient $\hat \alpha1_n$ =`r theta_tild1` et $\hat \alpha2_n$= `r theta_tild2` ce qui est proche de la moyenne empirique.
 
- on obtient $\alpha1_n$ =`r theta_tild1` et $\alpha2_n$= `r theta_tild2` 
-
-
-
+Concentrons nous sur $\hat \alpha1_n$ et appliquant la loi des grands nombres pour voir s'il est asymptotiquement efficace. 
 
 
 
@@ -462,31 +462,10 @@ theta_tild2<-sum(theta_tild2)/200
 
 
 
-```{r, echo=FALSE}
-library(zoo)
-dataB<-read.table("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
-
-```
 
 
-```{r }
 
 
-dataB$V1<-na.aggregate(dataB$V1,fUN=median)
 
-
-plot(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth ="0.2",
-             range.x = range(dataB$V2)),ylim=c(min(dataB$V1),max(dataB$V1)),col="red", type = "l")
-lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 1,
-              range.x = range(dataB$V2)),col="blue")
-lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 0.5,
-              range.x = range(dataB$V2)),col="green")
-lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 2,
-              range.x = range(dataB$V2)),col="skyblue")
-lines(ksmooth(dataB$V2,dataB$V1, kernel = "normal", bandwidth = 5,
-              range.x = range(dataB$V2)),col="pink")
-abline(h=0.5,col="black")
-
-```
 
 

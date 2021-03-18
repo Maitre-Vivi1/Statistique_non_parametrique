@@ -184,12 +184,6 @@ h_p_cv<-function(h){
     }}
   return(sum(summum)/length(summum))
 }
-<<<<<<< HEAD
-sequence<-seq(1,20,1)
-h_p_cv(Inf)
-estim_hp_cv<-sapply(sequence,h_p_cv)
-=======
->>>>>>> d750dbd99bdf3de8287c0beded8cfba2138a7adb
 
 
 sequence<-seq(10,50,10)
@@ -253,26 +247,26 @@ h_cv<-function(h){
     if (is.na(dataB$V1[k])){
 
       summum[k]<- NW_moinsI(dataB$V2[k],h,k)**2
-
     }
     else{  
       summum[k]<-(dataB$V1[k]/P_moinsI(dataB$V2[k],h=1.069,k=k)-NW_moinsI(dataB$V2[k],h,k))**2
-
     }}
   return(sum(summum)/length(summum))
 }
 
 
 
-sequence<-seq(0.5,0.7,0.001)
+sequence<-seq(1,10,1)
 
 estim_hcv<-sapply(sequence,h_cv)
 
 
-x <- cbind(seq(0.1,3,0.1), seq(20,400,10))
+x <- seq(0.5,10,0.1)
 y <- sapply(x, h_cv)
-
 plot(x =x, y=y, type="l")
+
+
+
 min_hcv<-estim_hcv[1]
 h_min<-sequence[1]
 for (i in 1:length(estim_hcv)){
@@ -284,10 +278,11 @@ for (i in 1:length(estim_hcv)){
 }
 print(h_min)
 
-sequence<-seq(2,4,0.01)
+sequence<-seq(2,2.2,0.0001)
 sequence<-seq(3.10,3.12,0.0001)
 h_validcroisee<-h_min
 
+h_cv(5.09 );h_cv(0.6);h_cv(Inf)
 
 
 # final estim e(Y) --------------------------------------------------------
