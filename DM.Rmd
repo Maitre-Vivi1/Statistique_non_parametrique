@@ -86,7 +86,7 @@ $2n^{2}\theta - n^{2}\bar{X_n} - n^{2}\bar{X_n}=0$
 $\tilde{\theta} = \bar{X_n}$  
 
 Ainsi en prenant le noyau gaussien et un paramètre de lissage optimal par validation croisée on trouve que l'estimateur asymptotiquement efficace pour $\theta$ est $\bar{X_n}=$ `r mean(devA$X1)`  
-Or, $E[\bar{X_n}] = \frac{1}{n}\sum_{i=1}^{n}E[X1]$ car les $X_i$ sont indépendants deux à deux, qu'ils sont issus de la même loi de densité $f(x)$ et que $X_i$ semble converger dans $L^1$. Ainsi par la loi des grands nombres : $\tilde{\theta}$ converge vers la vraie valeurs de $\theta$ asymptotiquement.
+Or, $E[\bar{X_n}] = \frac{1}{n}\sum_{i=1}^{n}E[X1]$ car les $X_i$ sont indépendants deux à deux, qu'ils sont issus de la même loi de densité $f(x)$ et que $X_i$ semble converger dans $L^1$. Ainsi par la loi des grands nombres : $\tilde{\theta}$ converge vers la vraie valeur de $\theta$ asymptotiquement.
 
 # Partie B
 ```{r,echo=FALSE, message=FALSE}
