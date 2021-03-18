@@ -17,19 +17,13 @@ Le meilleur estimateur de ${f}(x)$ au sens de l'erreur quadratique moyenne inté
 
 ```{r, echo=FALSE, message=FALSE}
 library(readr)
-devA <- read_csv("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
+devA <- read_csv("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
 ```
 
 
 ```{r, echo = FALSE, warning=FALSE}
 fn_chapeau <- density(devA$X1, bw="ucv", adjust=1, kernel="gaussian") 
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien")
-plot(density(devA$X1, bw="sj", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien et fenêtre plug-in")
-plot(density(devA$X1, bw="ucv", adjust=1, kernel="rectangular"), main = "Estimation de f(x) par noyau rectangulaire")
-plot(density(devA$X1, bw="ucv", adjust=1, kernel="triangular"), main = "Estimation de f(x) par noyau triangulaire")
-plot(density(devA$X1, bw="ucv", adjust=1, kernel="epanechnikov"), main = "Estimation de f(x) par noyau epanechnikov")
-plot(density(devA$X1, bw="ucv", adjust=1, kernel="cosine"), main = "Estimation de f(x) par noyau cosine")
-plot(density(devA$X1, bw="ucv", adjust=1, kernel="biweight"), main = "Estimation de f(x) par noyau biweight")
 ```
 
 
@@ -45,7 +39,8 @@ qqline(devA$X1)
 ```
 
 
-- Le choix de la fenêtre $h$ est réalisé par validation croisée puisque $h_{cv} = arg min_{h}[\int \hat{f}^2_{n}(x)dx - \frac{2}{n}\sum_{i=1}^{n}\hat{f}_{-i}(X_{i})]$. $h_{}cv$ est alors égal à `r fn_chapeau$bw`. 
+- Le choix de la fenêtre $h$ est réalisé par validation croisée *leave-one-out* puisque $h_{cv} = arg min_{h}[\int \hat{f}^2_{n}(x)dx - \frac{2}{n}\sum_{i=1}^{n}\hat{f}_{-i}(X_{i})]$.  
+$h_{cv}$ est alors égal à `r fn_chapeau$bw`. 
 
 
 
@@ -56,25 +51,43 @@ $f(x)$ est une loi symétrique par rapport à $\theta_{0}$. Par conséquent, on 
 ```{r, echo=FALSE, warning=FALSE}
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien");
 abline(v = fn_chapeau$x[which(fn_chapeau$y == max(fn_chapeau$y))], col = "red")
-
-plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien");
-abline(v = mean(devA$X1), col = "red")
 ```
 
-On approxime alors $\theta_{0}$ par $\theta_{0}^{approx} =$ `r fn_chapeau$x[which(fn_chapeau$y == max(fn_chapeau$y))]`
-ou par la moyenne empirique : $\bar{X}_{n} =$ `r mean(devA$X1)` puisque que $\theta_{0}$ est l'espérance de la loi symétrique $f(x)$.
+On approxime alors $\theta_{0}$ par $\theta_{0}^{approx} =$ `r fn_chapeau$x[which(fn_chapeau$y == max(fn_chapeau$y))]`.
 
 
 # Question 4 
 
-On peut faire mieux que ces approximations :
+On peut faire mieux que ces approximations :  
 
-$\bar{X}_n$
+On choisit le noyau gaussien : $K(x) = \frac{1}{\sqrt{2\pi}}exp(-x^2/2)$  
+notre fonction de densité est estimée par l'estimateur de Nadaraya-Watson : $\hat{f}_{n}(x)=\frac{1}{nh}\sum_{i=1}^{n}K(\frac{x-X_i}{h})$  
+la largeur de fenêtre obtenue par validation croisée : $h_{cv}$ = `r fn_chapeau$bw`  
 
+Or :  
+$\tilde{\theta} = argmax_{\theta} \sum^{n}_{i=1}ln\hat{f}_{n}(2\theta-X_i)$  
+$\tilde{\theta} = argmax_{\theta}\sum_{i=1}^{n}ln[\frac{1}{nh}\sum_{j=1}^{n}K(\frac{2\theta-X_i-X_j}{h})]$  
+$\tilde{\theta} = argmax_{\theta}\sum_{i=1}^{n}ln\sum_{j=1}^{n}K(\frac{2\theta-X_i-X_j}{h})$  
+
+On dérive la fonction dans le argmax par rapport à $\theta$ afin de la maximiser :  
+
+$g^{'}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}\frac{K^{'}(\frac{2\theta-X_i-X_j}{h})}{K(\frac{2\theta-X_i-X_j}{h})}$  
+$g^{'}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}\frac{(\frac{-2\theta}{h^2} + \frac{X_i}{h^2} + \frac{X_j}{h^2})exp(-(\frac{2\theta - X_i -X_j}{h})^2/2)}{exp(-(\frac{2\theta - X_i -X_j}{h})^2/2)}$  
+$g^{'}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}(2\theta + X_i + X_j)$  
+$g^{'}(\theta)= 0$  
+
+équivaut à :  
+
+$2n^{2}\theta - n^{2}\bar{X_n} - n^{2}\bar{X_n}$  
+
+$\tilde{\theta} = \bar{X_n}$  
+
+Ainsi en prenant le noyau gaussien et un paramètre de lissage optimal par validation croisée on trouve que l'estimateur asymptotiquement efficace pour $\theta$ est $\bar{X_n}=$ `r mean(devA$X1)`  
+Or, $E[\bar{X_n}] = \frac{1}{n}\sum_{i=1}^{n}E[X1]$ car les $X_i$ sont indépendants deux à deux, qu'ils sont issus de la même loi de densité $f(x)$ et que $X_i$ semble converger dans $L^1$. Ainsi par la loi des grands nombres : $\tilde{\theta}$ converge vers la vraie valeurs de $\theta$ asymptotiquement.
 
 # Partie B
 ```{r,echo=FALSE}
-dataB<-read.table("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
+dataB<-read.table("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
 
 ```
 
