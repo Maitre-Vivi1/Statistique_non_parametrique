@@ -1,6 +1,6 @@
 ---
 title: "DM"
-author: "Vivien & Louis"
+author: "Vivien Dupont et Louis Petat-Lenoir"
 date: "01/03/2021"
 output:  pdf_document
 ---
@@ -17,11 +17,11 @@ Le meilleur estimateur de ${f}(x)$ au sens de l'erreur quadratique moyenne inté
 
 ```{r, echo=FALSE, message=FALSE}
 library(readr)
-devA <- read_csv("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
+devA <- read_csv("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devA.txt", col_names = FALSE)
 ```
 
 
-```{r, echo = FALSE, warning=FALSE}
+```{r, echo = T, warning=FALSE}
 fn_chapeau <- density(devA$X1, bw="ucv", adjust=1, kernel="gaussian") 
 plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation de f(x) par noyau gaussien")
 ```
@@ -31,7 +31,7 @@ plot(density(devA$X1, bw="ucv", adjust=1, kernel="gaussian"), main = "Estimation
 # Question 2
 
 
-- Puisque l'on estime une loi de densité (semblant continue de par les nombreux chiffres après la virgule des observations) on souhaite que notre estimation ait les bonnes propriétés associées aux lois de densité. Ainsi il vient naturellement que le noyau $K$ doit être une densité de probabilité, lisse, continue et différentiable. Par défaut et sans information supplémentaire j'ai décidé de retenir le noyau gaussien. De plus, en faisant exception des valeurs extrêmes de notre echantillon, la partie centrale de la distribution de notre echantillon semble suivre une loi normale.
+- Puisque l'on estime une loi de densité (semblant continue de par les nombreux chiffres après la virgule des observations) on souhaite que notre estimation ait les bonnes propriétés associées aux lois de densité. Ainsi il vient naturellement que le noyau $K$ doit être une densité de probabilité, lisse, continue et différentiable. Par défaut et sans information supplémentaire j'ai décidé de retenir le noyau gaussien. De plus, en faisant exception des valeurs extrêmes de notre echantillon, la partie centrale de la distribution de notre echantillon semble suivre une loi normale. Néanmoins le choix du noyau importe peu puisque c'est avant tout le choix du paramètre de lissage qui intervient dans l'arbitrage biais-variance. Plus h est choisi petit et plus le biais sera faible et la viariance grande, si h est grand ce sera l'inverse.
 
 ```{r, echo=FALSE}
 qqnorm(devA$X1, main = "Echantillon devA", xlab = "Quantiles théoriques de loi normale", ylab = "Quantiles observés")
@@ -89,9 +89,8 @@ Ainsi en prenant le noyau gaussien et un paramètre de lissage optimal par valid
 Or, $E[\bar{X_n}] = \frac{1}{n}\sum_{i=1}^{n}E[X1]$ car les $X_i$ sont indépendants deux à deux, qu'ils sont issus de la même loi de densité $f(x)$ et que $X_i$ semble converger dans $L^1$. Ainsi par la loi des grands nombres : $\tilde{\theta}$ converge vers la vraie valeurs de $\theta$ asymptotiquement.
 
 # Partie B
-```{r,echo=FALSE}
-dataB<-read.table("C:\\Users\\admin\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
-
+```{r,echo=FALSE, message=FALSE}
+dataB<-read.table("C:\\Users\\vivi1\\Documents\\Statistique_non_parametrique\\donnees_source\\devB.txt")
 ```
 
 
@@ -117,7 +116,7 @@ $\hat m_n(x)=\frac{\sum D_i Y_i K(\frac {x-X_i}{h})}{\sum D_iK(\frac {x-X_i}{h})
 On cherche à écrire un programme permettant de calculer l'estimateur $\hat \alpha_n$ de $\alpha_0 =E(Y)$. On a calculé deux estimateurs de $\alpha_0$ tels que $\hat \alpha_{n,1}= \sum \hat m(X_i)/n$ et $\hat \alpha_{n,2}= \frac {1}{n}\sum [\frac{D_i Y_i}{\hat p(X_i)}+(1-\frac {D_i}{\hat p(X_i)})\hat m(X_i)]$
 
 
-```{r,echo=FALSE, warning=FALSE}
+```{r,echo=T, warning=FALSE}
 NW<-function(x,h=5){
   a<-c()
   kernel<-c()
@@ -218,7 +217,7 @@ p_hat<-function(x,h=5){
 ```
 
 Pour ceci, nous avons construit les fonctions retournant respectivement $\hat p$ et $\hat m$ pour un certain x et un paramètre de lissage h en appliquant la contrainte D=1.Nous avons choisi tout d'abord h=5 d'après un critère graphique mais nous calculerons sa valeur optimale par une validation croisée ultérieurement.
-```{r,echo=FALSE, message=FALSE}
+```{r,echo=T, message=FALSE}
 phat<-sapply(dataB$V2,p_hat)
 Nadi<-sapply(dataB$V2, NW)
 
@@ -256,7 +255,7 @@ $h_{p_{CV}}=\arg\min_h \frac{1}{n}\sum[D_i-\hat p_{n,h}^{(-i)}(X_i)]^2$
 avec  $\hat p_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n D_j K(.)}{\sum \limits_{j\neq i}^n K(.)}$ 
 
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=T, message=FALSE}
 P_moinsI<-function(x,h=1,k){
   D<-c()
   p<-c()
@@ -298,7 +297,7 @@ On construit un premier algorythme pour déterminer les  $\hat p_{n,h}^{(-i)}$ a
 
 Une deuxième fonction prenant en argument h pour faire varier le paramètre de lissage et retournant la valeur $h_{p_{CV}}$ applique la fonction ci-dessus en différençiant les 200 $Y_i$ observés ou non.   
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=T, message=T}
 sequence<-seq(1,1.2,0.001)
 estim_hp_cv<-sapply(sequence,h_p_cv)
 
@@ -327,7 +326,7 @@ avec $\hat m_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n D_jY_j K(.)}{\sum \limit
 
 Pour construire un algorithme permettant de determiner une approximation de h, il est néccessaire de construire $\hat m_{n,h}^{(-i)}$
 
-```{r,echo=FALSE,message=FALSE}
+```{r,echo=T,message=FALSE}
 NW_moinsI<-function(x,h=1,k){
   a<-c()
   kernel<-c()
@@ -370,7 +369,7 @@ Dans la même logique que pour $h_{p_{CV}}$, on construit un premier algorythme 
 
 Une deuxième fonction prenant en argument h pour faire varier le paramètre de lissage et retournant la valeur $h_{CV}$ applique la fonction ci-dessus en différençiant les 200 $Y_i$ observés ou non. Dans cette fonction, on applique la valeur optimale de $h_{p_{CV}}$ pour la valeur de $\hat p_{n,h}^{(-i)}$ calculée prédédemment. 
 
-```{r, echo=FALSE, message=FALSE}
+```{r, echo=T, message=T}
 sequence<-seq(0.5,1.5,0.01)
 estim_hcv<-sapply(sequence,h_cv)
 
@@ -392,7 +391,7 @@ En appliquant à la dernière fonction plusieurs séquences de h différents, on
 
 On remplace ainsi ensuite la valeur h=5 par h=1.069 pour $\hat p$ et h=0.6 pour $\hat m$ dans les fonctions permettant de calculer ces estimateurs
 
-```{r, echo= FALSE, message=FALSE}
+```{r, echo= T, message=T}
 h_validcroisee=1.069
 NW<-function(x,h=0.6){
   a<-c()
@@ -446,7 +445,7 @@ phat<-sapply(dataB$V2,p_hat)
 Nadi<-sapply(dataB$V2,NW)
 
 theta_tild1<-sum(Nadi)/200
-
+print(theta_tild1)
 
 theta_tild2<-c()
 for (i in 1:200){
@@ -459,7 +458,7 @@ for (i in 1:200){
   
 }
 theta_tild2<-sum(theta_tild2)/200
-
+print(theta_tild2)
 ```
 
 On obtient $\hat \alpha_{n,1}$ =`r theta_tild1` et $\hat \alpha_{n,2}$= `r theta_tild2` ce qui est proche de la moyenne empirique. Par résultat du cours $\hat \alpha_{n,1}$ et $\hat \alpha_{n,2}$ sont des estimateurs consistants et asyptotiquement efficaces de $\alpha_o= E(Y)$. On aurait aussi pu appliquer la loi des grands nombres pour le prouver
