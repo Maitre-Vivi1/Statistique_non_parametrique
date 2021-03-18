@@ -253,6 +253,18 @@ h_cv<-function(h){
     }}
   return(sum(summum)/length(summum))
 }
+h_cv<-function(h){
+  summum<-c()
+  for (k in 1:200){
+    if (is.na(dataB$V1[k])){
+      summum[k]<-NW_moinsI(dataB$V2[k],h,k)**2
+    }
+    else{  
+      summum[k]<-dataB$V1[k]**2
+    }}
+  summum=summum[summum!=0]
+  return(sum(summum)/length(summum))
+}
 
 
 

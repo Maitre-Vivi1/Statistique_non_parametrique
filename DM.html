@@ -48,6 +48,15 @@ if (!!window.navigator.userAgent.match("MSIE 8")) {
 !function(a){"use strict";a.matchMedia=a.matchMedia||function(a){var b,c=a.documentElement,d=c.firstElementChild||c.firstChild,e=a.createElement("body"),f=a.createElement("div");return f.id="mq-test-1",f.style.cssText="position:absolute;top:-100em",e.style.background="none",e.appendChild(f),function(a){return f.innerHTML='&shy;<style media="'+a+'"> #mq-test-1 { width: 42px; }</style>',c.insertBefore(e,d),b=42===f.offsetWidth,c.removeChild(e),{matches:b,media:a}}}(a.document)}(this),function(a){"use strict";function b(){u(!0)}var c={};a.respond=c,c.update=function(){};var d=[],e=function(){var b=!1;try{b=new a.XMLHttpRequest}catch(c){b=new a.ActiveXObject("Microsoft.XMLHTTP")}return function(){return b}}(),f=function(a,b){var c=e();c&&(c.open("GET",a,!0),c.onreadystatechange=function(){4!==c.readyState||200!==c.status&&304!==c.status||b(c.responseText)},4!==c.readyState&&c.send(null))};if(c.ajax=f,c.queue=d,c.regex={media:/@media[^\{]+\{([^\{\}]*\{[^\}\{]*\})+/gi,keyframes:/@(?:\-(?:o|moz|webkit)\-)?keyframes[^\{]+\{(?:[^\{\}]*\{[^\}\{]*\})+[^\}]*\}/gi,urls:/(url\()['"]?([^\/\)'"][^:\)'"]+)['"]?(\))/g,findStyles:/@media *([^\{]+)\{([\S\s]+?)$/,only:/(only\s+)?([a-zA-Z]+)\s?/,minw:/\([\s]*min\-width\s*:[\s]*([\s]*[0-9\.]+)(px|em)[\s]*\)/,maxw:/\([\s]*max\-width\s*:[\s]*([\s]*[0-9\.]+)(px|em)[\s]*\)/},c.mediaQueriesSupported=a.matchMedia&&null!==a.matchMedia("only all")&&a.matchMedia("only all").matches,!c.mediaQueriesSupported){var g,h,i,j=a.document,k=j.documentElement,l=[],m=[],n=[],o={},p=30,q=j.getElementsByTagName("head")[0]||k,r=j.getElementsByTagName("base")[0],s=q.getElementsByTagName("link"),t=function(){var a,b=j.createElement("div"),c=j.body,d=k.style.fontSize,e=c&&c.style.fontSize,f=!1;return b.style.cssText="position:absolute;font-size:1em;width:1em",c||(c=f=j.createElement("body"),c.style.background="none"),k.style.fontSize="100%",c.style.fontSize="100%",c.appendChild(b),f&&k.insertBefore(c,k.firstChild),a=b.offsetWidth,f?k.removeChild(c):c.removeChild(b),k.style.fontSize=d,e&&(c.style.fontSize=e),a=i=parseFloat(a)},u=function(b){var c="clientWidth",d=k[c],e="CSS1Compat"===j.compatMode&&d||j.body[c]||d,f={},o=s[s.length-1],r=(new Date).getTime();if(b&&g&&p>r-g)return a.clearTimeout(h),h=a.setTimeout(u,p),void 0;g=r;for(var v in l)if(l.hasOwnProperty(v)){var w=l[v],x=w.minw,y=w.maxw,z=null===x,A=null===y,B="em";x&&(x=parseFloat(x)*(x.indexOf(B)>-1?i||t():1)),y&&(y=parseFloat(y)*(y.indexOf(B)>-1?i||t():1)),w.hasquery&&(z&&A||!(z||e>=x)||!(A||y>=e))||(f[w.media]||(f[w.media]=[]),f[w.media].push(m[w.rules]))}for(var C in n)n.hasOwnProperty(C)&&n[C]&&n[C].parentNode===q&&q.removeChild(n[C]);n.length=0;for(var D in f)if(f.hasOwnProperty(D)){var E=j.createElement("style"),F=f[D].join("\n");E.type="text/css",E.media=D,q.insertBefore(E,o.nextSibling),E.styleSheet?E.styleSheet.cssText=F:E.appendChild(j.createTextNode(F)),n.push(E)}},v=function(a,b,d){var e=a.replace(c.regex.keyframes,"").match(c.regex.media),f=e&&e.length||0;b=b.substring(0,b.lastIndexOf("/"));var g=function(a){return a.replace(c.regex.urls,"$1"+b+"$2$3")},h=!f&&d;b.length&&(b+="/"),h&&(f=1);for(var i=0;f>i;i++){var j,k,n,o;h?(j=d,m.push(g(a))):(j=e[i].match(c.regex.findStyles)&&RegExp.$1,m.push(RegExp.$2&&g(RegExp.$2))),n=j.split(","),o=n.length;for(var p=0;o>p;p++)k=n[p],l.push({media:k.split("(")[0].match(c.regex.only)&&RegExp.$2||"all",rules:m.length-1,hasquery:k.indexOf("(")>-1,minw:k.match(c.regex.minw)&&parseFloat(RegExp.$1)+(RegExp.$2||""),maxw:k.match(c.regex.maxw)&&parseFloat(RegExp.$1)+(RegExp.$2||"")})}u()},w=function(){if(d.length){var b=d.shift();f(b.href,function(c){v(c,b.href,b.media),o[b.href]=!0,a.setTimeout(function(){w()},0)})}},x=function(){for(var b=0;b<s.length;b++){var c=s[b],e=c.href,f=c.media,g=c.rel&&"stylesheet"===c.rel.toLowerCase();e&&g&&!o[e]&&(c.styleSheet&&c.styleSheet.rawCssText?(v(c.styleSheet.rawCssText,e,f),o[e]=!0):(!/^([a-zA-Z:]*\/\/)/.test(e)&&!r||e.replace(RegExp.$1,"").split("/")[0]===a.location.host)&&("//"===e.substring(0,2)&&(e=a.location.protocol+e),d.push({href:e,media:f})))}w()};x(),c.update=x,c.getEmValue=t,a.addEventListener?a.addEventListener("resize",b,!1):a.attachEvent&&a.attachEvent("onresize",b)}}(this);
 };
 </script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script>
 
 /**
@@ -220,11 +229,6 @@ color: #d14;
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -237,32 +241,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
 
 
@@ -273,10 +251,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -293,6 +267,9 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
@@ -305,7 +282,6 @@ summary {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -369,7 +345,7 @@ summary {
 
 
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -413,12 +389,12 @@ la largeur de fenêtre obtenue par validation croisée : <span class="math inlin
 <span class="math inline">\(\tilde{\theta} = argmax_{\theta}\sum_{i=1}^{n}ln[\frac{1}{nh}\sum_{j=1}^{n}K(\frac{2\theta-X_i-X_j}{h})]\)</span><br />
 <span class="math inline">\(\tilde{\theta} = argmax_{\theta}\sum_{i=1}^{n}ln\sum_{j=1}^{n}K(\frac{2\theta-X_i-X_j}{h})\)</span></p>
 <p>On dérive la fonction dans le argmax par rapport à <span class="math inline">\(\theta\)</span> afin de la maximiser :</p>
-<p><span class="math inline">\(g^{&#39;}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}\frac{K^{&#39;}(\frac{2\theta-X_i-X_j}{h})}{K(\frac{2\theta-X_i-X_j}{h})}\)</span><br />
-<span class="math inline">\(g^{&#39;}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}\frac{(\frac{-2\theta}{h^2} + \frac{X_i}{h^2} + \frac{X_j}{h^2})exp(-(\frac{2\theta - X_i -X_j}{h})^2/2)}{exp(-(\frac{2\theta - X_i -X_j}{h})^2/2)}\)</span><br />
-<span class="math inline">\(g^{&#39;}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}(2\theta + X_i + X_j)\)</span><br />
-<span class="math inline">\(g^{&#39;}(\theta)= 0\)</span></p>
+<p><span class="math inline">\(g^{&#39;}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}\frac{K^{&#39;}(\frac{2\theta-X_i-X_j}{h})}{K(\frac{2\theta-X_i-X_j}{h})}\)</span></p>
+<p><span class="math inline">\(g^{&#39;}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}\frac{(\frac{-2\theta}{h^2} + \frac{X_i}{h^2} + \frac{X_j}{h^2})exp(-(\frac{2\theta - X_i -X_j}{h})^2/2)}{exp(-(\frac{2\theta - X_i -X_j}{h})^2/2)}\)</span></p>
+<p><span class="math inline">\(g^{&#39;}(\theta)= \sum^{n}_{i=1}\sum^{n}_{j=1}(2\theta + X_i + X_j)\)</span></p>
+<p><span class="math inline">\(g^{&#39;}(\theta)= 0\)</span></p>
 <p>équivaut à :</p>
-<p><span class="math inline">\(2n^{2}\theta - n^{2}\bar{X_n} - n^{2}\bar{X_n}\)</span></p>
+<p><span class="math inline">\(2n^{2}\theta - n^{2}\bar{X_n} - n^{2}\bar{X_n}=0\)</span></p>
 <p><span class="math inline">\(\tilde{\theta} = \bar{X_n}\)</span></p>
 <p>Ainsi en prenant le noyau gaussien et un paramètre de lissage optimal par validation croisée on trouve que l’estimateur asymptotiquement efficace pour <span class="math inline">\(\theta\)</span> est <span class="math inline">\(\bar{X_n}=\)</span> 2.0501181<br />
 Or, <span class="math inline">\(E[\bar{X_n}] = \frac{1}{n}\sum_{i=1}^{n}E[X1]\)</span> car les <span class="math inline">\(X_i\)</span> sont indépendants deux à deux, qu’ils sont issus de la même loi de densité <span class="math inline">\(f(x)\)</span> et que <span class="math inline">\(X_i\)</span> semble converger dans <span class="math inline">\(L^1\)</span>. Ainsi par la loi des grands nombres : <span class="math inline">\(\tilde{\theta}\)</span> converge vers la vraie valeurs de <span class="math inline">\(\theta\)</span> asymptotiquement.</p>
@@ -429,37 +405,39 @@ Or, <span class="math inline">\(E[\bar{X_n}] = \frac{1}{n}\sum_{i=1}^{n}E[X1]\)<
 <div id="question-1-1" class="section level1">
 <h1>Question 1</h1>
 <p>Sachant que les données observées sont issues d’une régression, que nos valeurs manquantes sont en fait des réponses et que l’hypothèse des observations MAR est satisfaite on a :</p>
-<p><span class="math inline">\(Y=m(X)+\epsilon\)</span> , $ E( |X)=0$ et <span class="math inline">\(Y {\perp \!\!\! \perp}D,X\)</span>.</p>
+<p><span class="math inline">\(Y=m(X)+\epsilon\)</span> , <span class="math inline">\(E( \epsilon |X)=0\)</span> et <span class="math inline">\(Y {\perp \!\!\! \perp}D,X\)</span>.</p>
 <p>On souhaite estimer l’esperance de Y avec l’estimateur de Nadaraya-Watson: <span class="math inline">\(\hat r(u)=\frac{\sum Z_iK(\frac{u-U_i}{h})}{\sum K(\frac{u-U_i}{h})}\)</span> avec K le noyau et h la fenêtre.</p>
 <p>On sait que <span class="math inline">\(P(X)=P(D=1|X)=E(D|X)\)</span> donc on a :</p>
 <p><span class="math inline">\(m(X)=E(Y|X)=\frac {E(DY|X)}{E(D|X)}\)</span>. On applique l’estimateur de Nadaraya-Watson sur E(DY|X) et E(D|X) et on obtient</p>
 <p><span class="math inline">\(E(DY|X)=\frac{\sum D_i Y_i K(\frac {x-X_i}{h})}{\sum K(\frac {x-X_i}{h})}\)</span> et <span class="math inline">\(E(D|X)=\hat p(X)=\frac{\sum D_i K(\frac {x-X_i}{h})}{\sum K(\frac {x-X_i}{h})}\)</span></p>
 <p>ce qui nous donne l’estimateur <span class="math inline">\(\hat m_n\)</span> de m en simplifiant:</p>
 <p><span class="math inline">\(\hat m_n(x)=\frac{\sum D_i Y_i K(\frac {x-X_i}{h})}{\sum D_iK(\frac {x-X_i}{h})}\)</span></p>
-<p>On cherche à écrire un programme permettant de calculer l’estimateur <span class="math inline">\(\hat \alpha_n\)</span> de <span class="math inline">\(\alpha_0 =E(Y)\)</span>. On a calculé deuc estimateurs de <span class="math inline">\(\alpha_0\)</span> tels que <span class="math inline">\(\hat \alpha1_n= \sum \hat m(X_i)/n\)</span> et <span class="math inline">\(\hat \alpha2_n= \frac {1}{n}\sum [\frac{D_i Y_i}{\hat p(X_i)}+(1-\frac {D_i}{\hat p(X_i)})\hat m(X_i)]\)</span></p>
+<p>On cherche à écrire un programme permettant de calculer l’estimateur <span class="math inline">\(\hat \alpha_n\)</span> de <span class="math inline">\(\alpha_0 =E(Y)\)</span>. On a calculé deux estimateurs de <span class="math inline">\(\alpha_0\)</span> tels que <span class="math inline">\(\hat \alpha_{n,1}= \sum \hat m(X_i)/n\)</span> et <span class="math inline">\(\hat \alpha_{n,2}= \frac {1}{n}\sum [\frac{D_i Y_i}{\hat p(X_i)}+(1-\frac {D_i}{\hat p(X_i)})\hat m(X_i)]\)</span></p>
 <p>Pour ceci, nous avons construit les fonctions retournant respectivement <span class="math inline">\(\hat p\)</span> et <span class="math inline">\(\hat m\)</span> pour un certain x et un paramètre de lissage h en appliquant la contrainte D=1.Nous avons choisi tout d’abord h=5 d’après un critère graphique mais nous calculerons sa valeur optimale par une validation croisée ultérieurement.</p>
-<p>Puis, il a fallu appliquer ces fonctions à l’ensemble des <span class="math inline">\(X_i\)</span> avec la fonction sapply() retournant ainsi un vecteur de valeurs. Il suffit ensuite de construire les estimateurs <span class="math inline">\(\hat\alpha1_n\)</span> et <span class="math inline">\(\hat \alpha2_n\)</span> avec ces valeurs</p>
-<p>Avec h=5 on obtient <span class="math inline">\(\hat \alpha1_n\)</span> =0.9173743 et <span class="math inline">\(\hat \alpha2_n\)</span>= 0.9173858</p>
-<p>Nous calculons ensuite le paramètre de lissage h optimal par validation croisée.</p>
+<p>Puis, il a fallu appliquer ces fonctions à l’ensemble des <span class="math inline">\(X_i\)</span> avec la fonction sapply() retournant ainsi un vecteur de valeurs. Il suffit ensuite de construire les estimateurs <span class="math inline">\(\hat\alpha_{n,1}\)</span> et <span class="math inline">\(\hat \alpha_{n,2}\)</span> avec ces valeurs</p>
+<p>Avec h=5 on obtient <span class="math inline">\(\hat \alpha_{n,1}\)</span> =0.9173743 et <span class="math inline">\(\hat \alpha_{n,2}\)</span>= 0.9173858</p>
+<p>Nous calculons ensuite le paramètre de lissage h optimal par validation croisée. Puisque <span class="math inline">\(\hat p\)</span> et <span class="math inline">\(\hat m\)</span> sont des estimateurs de regression différents, il faut trouver un h par validation croisée pour chacun d’entre eux.</p>
 <p>Calculons tout d’abord l’estimateur <span class="math inline">\(h_{p_{CV}}\)</span> le paramètre de lissage de <span class="math inline">\(\hat p\)</span>. On fait une validation croisée en leave-1-out en prenant:</p>
 <p><span class="math inline">\(h_{p_{CV}}=\arg\min_h \frac{1}{n}\sum[D_i-\hat p_{n,h}^{(-i)}(X_i)]^2\)</span></p>
 <p>avec <span class="math inline">\(\hat p_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n D_j K(.)}{\sum \limits_{j\neq i}^n K(.)}\)</span></p>
-<p>On construit un premier algorythme pour déterminer les <span class="math inline">\(\hat p_{n,h}^{(-i)}\)</span> avec une fonction prenant en argument une observation x, un paramètre de lissage h=1 qui variera à l’avenir et un paramètre k permettant de retirer l’observation i. Cette fonction retourne la valeur de <span class="math inline">\(\hat p_{n,h}^{(-i)}\)</span> pour un <span class="math inline">\(x_i\)</span> fixé en vérifiant si <span class="math inline">\(Y_i\)</span> est observé.</p>
+<p>On construit un premier algorythme pour déterminer les <span class="math inline">\(\hat p_{n,h}^{(-i)}\)</span> avec une fonction prenant en argument une observation x, un paramètre de lissage h qui variera à l’avenir et un paramètre k permettant de retirer l’observation i. Cette fonction retourne la valeur de <span class="math inline">\(\hat p_{n,h}^{(-i)}\)</span> pour un <span class="math inline">\(x_i\)</span> fixé en vérifiant si <span class="math inline">\(Y_i\)</span> est observé.</p>
 <p>Une deuxième fonction prenant en argument h pour faire varier le paramètre de lissage et retournant la valeur <span class="math inline">\(h_{p_{CV}}\)</span> applique la fonction ci-dessus en différençiant les 200 <span class="math inline">\(Y_i\)</span> observés ou non.</p>
-<pre><code>## [1] 0.203634</code></pre>
-<pre><code>## [1] 1</code></pre>
+<pre><code>## [1] 1.069</code></pre>
 <p>En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c’est à dire la valeur de h pour laquelle <span class="math inline">\(h_{p_{CV}}\)</span> est <span class="math inline">\(\arg\min_{h} \frac{1}{n}\sum[D_i- \hat p_{n,h}^{(-i)}(X_i)]^2\)</span> . On trouve donc pour <span class="math inline">\(h_{p_{CV}}\)</span> la valeur 1.069</p>
-<p>Maintenant qu’on a trouvé le <span class="math inline">\(h_{p_{CV}}\)</span> par validation croisée pour<span class="math inline">\(\hat p\)</span> on va faire une validation croisée pour <span class="math inline">\(\hat m\)</span>. l’estimation de h pour l’estimateur <span class="math inline">\(\hat m\)</span> par la validation croisée qui va</p>
+<p>Maintenant qu’on a trouvé le <span class="math inline">\(h_{p_{CV}}\)</span> par validation croisée pour <span class="math inline">\(\hat p\)</span> on va faire une validation croisée pour <span class="math inline">\(\hat m\)</span>. l’estimation de h pour l’estimateur <span class="math inline">\(\hat m\)</span> par la validation croisée qui va</p>
 <p>vérifier <span class="math inline">\(h_{CV}=\arg\min_{h} \frac{1}{n}\sum[\frac{D_iY_i}{\hat p_{n,h}^{(-i)}}- \hat m_{n,h}^{(-i)}(X_i)]^2\)</span></p>
 <p>avec <span class="math inline">\(\hat m_{n,h}^{(-i)}=\frac{\sum\limits_{j\neq i}^n D_jY_j K(.)}{\sum \limits_{j\neq i}^n D_jK(.)}\)</span></p>
 <p>Pour construire un algorithme permettant de determiner une approximation de h, il est néccessaire de construire <span class="math inline">\(\hat m_{n,h}^{(-i)}\)</span></p>
-<p>Dans la même logique que pour <span class="math inline">\(h_{p_{CV}}\)</span>, on construit un premier algorythme pour déterminer les <span class="math inline">\(\hat m_{n,h}^{(-i)}\)</span> avec une fonction prenant en argument une observation x, un paramètre de lissage h=1 qui variera à l’avenir et un paramètre k permettant de retirer l’observation i. Cette fonction retourne la valeur de <span class="math inline">\(\hat m_{n,h}^{(-i)}\)</span> pour un <span class="math inline">\(x_i\)</span> fixé en vérifiant si <span class="math inline">\(Y_i\)</span> est observé.</p>
+<p>Dans la même logique que pour <span class="math inline">\(h_{p_{CV}}\)</span>, on construit un premier algorythme pour déterminer les <span class="math inline">\(\hat m_{n,h}^{(-i)}\)</span> avec une fonction prenant en argument une observation x, un paramètre de lissage h qui variera à l’avenir et un paramètre k permettant de retirer l’observation i. Cette fonction retourne la valeur de <span class="math inline">\(\hat m_{n,h}^{(-i)}(X)\)</span></p>
 <p>Une deuxième fonction prenant en argument h pour faire varier le paramètre de lissage et retournant la valeur <span class="math inline">\(h_{CV}\)</span> applique la fonction ci-dessus en différençiant les 200 <span class="math inline">\(Y_i\)</span> observés ou non. Dans cette fonction, on applique la valeur optimale de <span class="math inline">\(h_{p_{CV}}\)</span> pour la valeur de <span class="math inline">\(\hat p_{n,h}^{(-i)}\)</span> calculée prédédemment.</p>
 <pre><code>## [1] 0.6</code></pre>
-<p>En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c-a-d la valeur de h pour laquelle <span class="math inline">\(h_{CV}\)</span> est minimal. On trouve donc pour <span class="math inline">\(h_{CV}\)</span> la valeur 5.09</p>
-<p>On remplace ainsi ensuite la valeur h=5 par h=1.069 pour <span class="math inline">\(\hat p\)</span> et h=5.08 pour <span class="math inline">\(\hat m\)</span> dans les fonctions permettant de calculer ces estimateurs</p>
-<p>On obtient <span class="math inline">\(\hat \alpha1_n\)</span> =0.9176117 et <span class="math inline">\(\hat \alpha2_n\)</span>= 0.9205249 ce qui est proche de la moyenne empirique.</p>
-<p>Concentrons nous sur <span class="math inline">\(\hat \alpha1_n\)</span> et appliquant la loi des grands nombres pour voir s’il est asymptotiquement efficace.</p>
+<p>En appliquant à la dernière fonction plusieurs séquences de h différents, on essaye de determiner une approximation de h optimale c’est à dire la valeur de h pour laquelle <span class="math inline">\(h_{CV}\)</span> est minimal. On trouve donc pour <span class="math inline">\(h_{CV}\)</span> la valeur 0.6</p>
+<p>On remplace ainsi ensuite la valeur h=5 par h=1.069 pour <span class="math inline">\(\hat p\)</span> et h=0.6 pour <span class="math inline">\(\hat m\)</span> dans les fonctions permettant de calculer ces estimateurs</p>
+<p>On obtient <span class="math inline">\(\hat \alpha_{n,1}\)</span> =0.8078243 et <span class="math inline">\(\hat \alpha_{n,2}\)</span>= 0.9011848 ce qui est proche de la moyenne empirique. Par résultat du cours <span class="math inline">\(\hat \alpha_{n,1}\)</span> et <span class="math inline">\(\hat \alpha_{n,2}\)</span> sont des estimateurs consistants et asyptotiquement efficaces de <span class="math inline">\(\alpha_o= E(Y)\)</span>. On aurait aussi pu appliquer la loi des grands nombres pour le prouver</p>
+</div>
+<div id="question-2-1" class="section level1">
+<h1>Question 2</h1>
+<p>Pour le choix des paramètres de lissage, nous avons choisi de les determiner par validation croisée leave-one-out car cette méthode minimise les erreurs de prédiction. Quant à la méthode, nous avons appliqué l’estimateur de NW à un jeu de données avec valeurs manquantes en prenant un noyau gaussien. Le choix du noyau importe peu, seul le choix du paramètre de lissage permet de réaliser un arbitrage Biais-variance.</p>
 </div>
 
 
@@ -489,7 +467,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
